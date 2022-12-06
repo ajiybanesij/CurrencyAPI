@@ -16,14 +16,16 @@ import (
 func CreateOffer(fromCurrency, toCurrency string) (map[string]interface{}, error) {
 	fromCurrency = strings.ToUpper(fromCurrency)
 	toCurrency = strings.ToUpper(toCurrency)
+
 	if fromCurrency == toCurrency {
 		return nil, errors.New("please select different currencies")
 	}
+
+	// Get Rate
 	rate, ok := Config.RATES[fromCurrency+"-"+toCurrency]
 	if !ok {
 		return nil, errors.New("cuurency is invalid")
 	}
-	fmt.Println(rate)
 
 	// From Wallet Check
 	var fromWallet Repositories.Wallet
@@ -74,7 +76,7 @@ func CreateOffer(fromCurrency, toCurrency string) (map[string]interface{}, error
 	return response, nil
 }
 
-func AcceptOffer(offerID string, amount float64) (*Repositories.Transaction, error) {
+func AcceptOffer(offerID string, userId uint, amount float64) (*Repositories.Transaction, error) {
 	// Offer Control
 	offerInfoString, err := Helpers.ReadRedis(offerID)
 	if err != nil {
@@ -138,10 +140,19 @@ func AcceptOffer(offerID string, amount float64) (*Repositories.Transaction, err
 	transaction.ToCurrency = offerInfo["toCurrency"].(string)
 	transaction.ToAmount = toBalance.Amount
 
+	transaction.Rate = rate
+	transaction.UserID = userId
+
 	transactionErr := transaction.Create()
 	if transactionErr != nil {
 		fmt.Println("transaction error", transactionErr)
 		return nil, nil
+	}
+
+	redisDeleteErr := Helpers.DeleteRedis(offerID)
+	if redisDeleteErr != nil {
+		fmt.Println("offer can not deleted", redisDeleteErr)
+		return &transaction, nil
 	}
 
 	return &transaction, nil

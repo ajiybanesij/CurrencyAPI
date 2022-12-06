@@ -29,7 +29,8 @@ func TestAcceptOfferFail(t *testing.T) {
 	Config.InitRedis()
 
 	offerId := "4cc2406e-b34a-4ff1-81c4-7d5c0c1e6a20"
-	resp, err := Business.AcceptOffer(offerId, 10)
+	userId := uint(1)
+	resp, err := Business.AcceptOffer(offerId, userId, 10)
 	assert.Equal(t, nil, resp)
 	assert.NotEqual(t, nil, err)
 }
@@ -44,7 +45,9 @@ func TestOffer(t *testing.T) {
 	result, err := Business.CreateOffer(from, to)
 
 	offerId := result["offerId"].(string)
-	resp, err := Business.AcceptOffer(offerId, 10)
+
+	userId := uint(1)
+	resp, err := Business.AcceptOffer(offerId, userId, 10)
 
 	assert.NotEqual(t, nil, resp)
 	assert.Equal(t, nil, err)

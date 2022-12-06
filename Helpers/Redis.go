@@ -22,3 +22,10 @@ func ReadRedis(key string) (*string, error) {
 	}
 	return &val, nil
 }
+
+func DeleteRedis(key string) error {
+	if err := Config.GetRedisInstance().Del(ctx, key).Err(); err != nil {
+		return err
+	}
+	return nil
+}

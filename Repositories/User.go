@@ -6,10 +6,11 @@ import (
 )
 
 type User struct {
-	gorm.Model `json:"model" `
-	Name       string `json:"username" gorm:"unique"`
-	Hash       string `gorm:"unique"`
-	Wallet     []Wallet
+	gorm.Model  `json:"model" `
+	Name        string `json:"username" gorm:"unique"`
+	Hash        string `gorm:"unique"`
+	Wallet      []Wallet
+	Transaction []Transaction
 }
 
 func (u *User) TableName() string {

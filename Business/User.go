@@ -49,7 +49,7 @@ func LoginUser(param Models.User) (*string, error) {
 		return nil, errors.New("invalid username or password")
 	}
 
-	jwt, jwtError := Helpers.GenerateToken(user.Name)
+	jwt, jwtError := Helpers.GenerateToken(user.ID)
 	if jwtError != nil {
 		fmt.Println("generate jwt token error", jwtError)
 		return nil, errors.New("login error")

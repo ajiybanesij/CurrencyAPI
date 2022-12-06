@@ -1,18 +1,19 @@
 package Repositories
 
 import (
-	"errors"
 	"gorm.io/gorm"
 )
 
 type Transaction struct {
 	gorm.Model
 	FromCurrency string
+	FromAmount   float64
+	FromWalletID uint
 	ToCurrency   string
-	InAmount     float64
-	OutAmount    float64
+	ToAmount     float64
+	ToWalletID   uint
 	Rate         float64
-	WalletID     uint
+	UserID       uint
 }
 
 func (t *Transaction) TableName() string {
@@ -26,13 +27,12 @@ func (t *Transaction) Create() error {
 	return nil
 }
 
-func (t *Transaction) Read(condition map[string]interface{}) error {
-	result := GetDBInstance().Where(condition).Find(t)
-	if result.Error != nil {
-		return result.Error
+func (t *Transaction) Read(condition map[string]interface{}) (*[]Transaction, error) {
+	var transactions []Transaction
+	err := GetDBInstance().Where(condition).Find(&transactions).Error
+	if err != nil {
+		return nil, err
 	}
-	if result.RowsAffected == 0 {
-		return errors.New("record not found")
-	}
-	return nil
+	return &transactions, nil
+
 }

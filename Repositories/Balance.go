@@ -1,7 +1,6 @@
 package Repositories
 
 import (
-	"errors"
 	"gorm.io/gorm"
 )
 
@@ -23,13 +22,13 @@ func (b *Balance) Create() error {
 	return nil
 }
 
-func (b *Balance) Read(condition map[string]interface{}) error {
-	result := GetDBInstance().Where(condition).Find(b)
-	if result.Error != nil {
-		return result.Error
+func (b *Balance) ReadBalance(walletId interface{}) (*float64, error) {
+	var sum float64
+	result := GetDBInstance().Table(b.TableName()).Where("wallet_id = ?", walletId).Select("sum(amount)").Row().Scan(&sum)
+
+	if result != nil {
+		return nil, result
 	}
-	if result.RowsAffected == 0 {
-		return errors.New("record not found")
-	}
-	return nil
+
+	return &sum, nil
 }
