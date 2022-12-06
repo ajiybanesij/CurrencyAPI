@@ -3,7 +3,9 @@
 ## Running
 
 This API run on Docker.
-https://hub.docker.com/repository/docker/1864/currencyapi
+- Docker Image  https://hub.docker.com/repository/docker/1864/currencyapi
+- Postman Collection  [Here](https://github.com/ajiybanesij/CurrencyAPI/blob/main/Currency%20API.postman_collection.json)
+- Swagger YAML  [Here](https://github.com/ajiybanesij/CurrencyAPI/blob/main/swagger.yaml)
 
 ### Requirement and Dependencies
 
